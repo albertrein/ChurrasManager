@@ -5,12 +5,23 @@
     <title>Home</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-    <script>
+    <script type="application/javascript">
 
         function updateListaParticipantes(){
-            $.getJSON("/teste", function (dadosRetornados) {
-                console.log(">>>",dadosRetornados);
-                console.log(JSON.stringify(dadosRetornados));
+            $.getJSON("/listaParticipantes", function (dadosRetornados) {
+                //console.log(">>>",dadosRetornados);
+                dadosRetornados.forEach(function(e){
+                    e = jQuery.parseJSON(e);
+
+                    var newRowTable = "<tr>";
+                    newRowTable += "<td>"+e["nomeParticipante"]+"</td>";
+                    newRowTable += "<td>"+e["valorPago"]+"</td>";
+                    newRowTable += "<td>"+e["bebida"]+"</td>";
+                    newRowTable += "<td>"+e["pago"]+"</td>";
+                    newRowTable += "<td>"+e["observacao"]+"</td>";
+                    newRowTable += "</tr>";
+                    $("#tbody").append(newRowTable);
+                });
             });
         }
 
@@ -54,21 +65,22 @@
                 <td style="font-weight: bold">observacao</td>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="participante : ${participantes}">
+            <tbody id="tbody">
+
+            <!--<tr th:each="participante : ${participantes}">
                 <td th:text="${participante.nomeParticipante}"></td>
                 <td th:text="${participante.valorPago}"></td>
                 <td th:text="${participante.bebida}"></td>
                 <td th:text="${participante.pago}"></td>
                 <td th:text="${participante.observacao}"></td>
-            </tr>
+            </tr>-->
             </tbody>
         </table>
     </div>
 
     <div class="novoParticipante">
         <p>Novo Participante:</p>
-        <form th:action="@{/novoParticipante}" method="POST" th:object="${novoParticipante}">
+        <form th:action="@{/}" method="POST" th:object="${novoParticipante}">
             <input th:field="*{nomeParticipante}" type="text">
             <input th:field="*{valorPago}" type="number">
             <input th:field="*{bebida}" type="text">
