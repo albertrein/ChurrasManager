@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+
+        function updateListaParticipantes(){
+            $.getJSON("/teste", function (dadosRetornados) {
+                console.log(">>>",dadosRetornados);
+            });
+        }
+
+        $(document).ready(function(){
+
+            updateListaParticipantes(); //testando get
+
+            $("#form1").submit(function (e){
+                e.preventDefault();
+
+                var objectToSend = {};
+                $.each($(this).serializeArray(), function(){
+                    objectToSend[this.name] = this.value;
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/calculadora",
+                    contentType : 'application/json; charset=utf-8',
+                    dataType : 'json',
+                    data: JSON.stringify(objectToSend),
+                    success: function (dataResponde) {
+                        console.log(dataResponde);
+                    }
+                });
+            });
+        });
+    </script>
+
+</head>
+<body>
+    <div class="listaParicipantes">
+        <h1>Churras da Facul</h1>
+        <table>
+            <thead>
+            <tr>
+                <td style="font-weight: bold">nomeParticipante</td>
+                <td style="font-weight: bold">valorPago</td>
+                <td style="font-weight: bold">bebida</td>
+                <td style="font-weight: bold">pago</td>
+                <td style="font-weight: bold">observacao</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="participante : ${participantes}">
+                <td th:text="${participante.nomeParticipante}"></td>
+                <td th:text="${participante.valorPago}"></td>
+                <td th:text="${participante.bebida}"></td>
+                <td th:text="${participante.pago}"></td>
+                <td th:text="${participante.observacao}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="novoParticipante">
+        <p>Novo Participante:</p>
+        <form th:action="@{/novoParticipante}" method="POST" th:object="${novoParticipante}">
+            <input th:field="*{nomeParticipante}" type="text">
+            <input th:field="*{valorPago}" type="number">
+            <input th:field="*{bebida}" type="text">
+            <input th:field="*{pago}" type="number">
+            <input th:field="*{observacao}" type="text">
+            <input type="submit">
+        </form>
+    </div>
+
+</body>
+</html>
