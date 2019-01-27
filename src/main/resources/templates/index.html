@@ -9,7 +9,6 @@
 
         function updateListaParticipantes(){
             $.getJSON("/listaParticipantes", function (dadosRetornados) {
-                //console.log(">>>",dadosRetornados);
                 dadosRetornados.forEach(function(e){
                     e = jQuery.parseJSON(e);
 
@@ -45,6 +44,7 @@
                     data: JSON.stringify(objectToSend),
                     success: function (dataResponde) {
                         console.log(dataResponde);
+                        updateListaParticipantes();
                     }
                 });
             });
@@ -66,14 +66,6 @@
             </tr>
             </thead>
             <tbody id="tbody">
-
-            <!--<tr th:each="participante : ${participantes}">
-                <td th:text="${participante.nomeParticipante}"></td>
-                <td th:text="${participante.valorPago}"></td>
-                <td th:text="${participante.bebida}"></td>
-                <td th:text="${participante.pago}"></td>
-                <td th:text="${participante.observacao}"></td>
-            </tr>-->
             </tbody>
         </table>
     </div>

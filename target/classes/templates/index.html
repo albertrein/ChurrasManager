@@ -9,7 +9,6 @@
 
         function updateListaParticipantes(){
             $.getJSON("/listaParticipantes", function (dadosRetornados) {
-                //console.log(">>>",dadosRetornados);
                 dadosRetornados.forEach(function(e){
                     e = jQuery.parseJSON(e);
 
@@ -27,24 +26,29 @@
 
         $(document).ready(function(){
 
-            updateListaParticipantes(); //testando get
+            updateListaParticipantes(); //Atualizando lista de participantes
 
-            $("#form1").submit(function (e){
+            $("#addNewParticipante").submit(function (e){
                 e.preventDefault();
 
                 var objectToSend = {};
                 $.each($(this).serializeArray(), function(){
+                    console.log(this.name, this.value);
                     objectToSend[this.name] = this.value;
                 });
 
+                console.log(objectToSend);
+
+
                 $.ajax({
                     type: "POST",
-                    url: "/calculadora",
+                    url: "/novoParticipante",
                     contentType : 'application/json; charset=utf-8',
                     dataType : 'json',
                     data: JSON.stringify(objectToSend),
                     success: function (dataResponde) {
                         console.log(dataResponde);
+                        updateListaParticipantes();
                     }
                 });
             });
@@ -66,21 +70,13 @@
             </tr>
             </thead>
             <tbody id="tbody">
-
-            <!--<tr th:each="participante : ${participantes}">
-                <td th:text="${participante.nomeParticipante}"></td>
-                <td th:text="${participante.valorPago}"></td>
-                <td th:text="${participante.bebida}"></td>
-                <td th:text="${participante.pago}"></td>
-                <td th:text="${participante.observacao}"></td>
-            </tr>-->
             </tbody>
         </table>
     </div>
 
     <div class="novoParticipante">
         <p>Novo Participante:</p>
-        <form th:action="@{/}" method="POST" th:object="${novoParticipante}">
+        <form id="addNewParticipante" th:action="@{/}" method="POST" th:object="${novoParticipante}">
             <input th:field="*{nomeParticipante}" type="text">
             <input th:field="*{valorPago}" type="number">
             <input th:field="*{bebida}" type="text">

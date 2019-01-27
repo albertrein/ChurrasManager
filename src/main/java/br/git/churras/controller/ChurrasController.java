@@ -7,10 +7,7 @@ import jdk.nashorn.internal.ir.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -25,22 +22,16 @@ public class ChurrasController {
 
     @GetMapping
     public String novoParticipante(Model md){
-
-        //md.addAttribute("participantes",participantesRepository.findAll());
         md.addAttribute("novoParticipante", new Participante());
-
         return "index";
     }
 
-    @PostMapping
-    public String salvarNovoParticipante(Participante participante, Model md){
+    @PostMapping("/novoParticipante")
+    public @ResponseBody String salvarNovoParticipante(@RequestBody Participante participante){
+
+        System.out.println(participante.getNomeParticipante());
         participantesRepository.save(participante);
-
-        //md.addAttribute("participantes",participantesRepository.findAll());
-        md.addAttribute("novoParticipante", new Participante());
-        md.addAttribute("resposta","Salvo");
-
-        return "index";
+        return "{\"resposta\" : \"sucess\"}";
     }
 
     @GetMapping("/listaParticipantes")
