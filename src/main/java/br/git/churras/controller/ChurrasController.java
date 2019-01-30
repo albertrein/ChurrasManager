@@ -28,8 +28,6 @@ public class ChurrasController {
 
     @PostMapping("/novoParticipante")
     public @ResponseBody String salvarNovoParticipante(@RequestBody Participante participante){
-
-        System.out.println(participante.getNomeParticipante());
         participantesRepository.save(participante);
         return "{\"resposta\" : \"sucess\"}";
     }

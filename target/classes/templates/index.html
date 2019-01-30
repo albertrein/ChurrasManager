@@ -2,59 +2,19 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Gerenciador de Churras</title>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+    <script src="jquery.min.js"></script>
 
-    <script type="application/javascript">
-
-        function updateListaParticipantes(){
-            $.getJSON("/listaParticipantes", function (dadosRetornados) {
-                dadosRetornados.forEach(function(e){
-                    e = jQuery.parseJSON(e);
-
-                    var newRowTable = "<tr>";
-                    newRowTable += "<td>"+e["nomeParticipante"]+"</td>";
-                    newRowTable += "<td>"+e["valorPago"]+"</td>";
-                    newRowTable += "<td>"+e["bebida"]+"</td>";
-                    newRowTable += "<td>"+e["pago"]+"</td>";
-                    newRowTable += "<td>"+e["observacao"]+"</td>";
-                    newRowTable += "</tr>";
-                    $("#tbody").append(newRowTable);
-                });
-            });
+    <script src="indexComponents.js"></script>
+    <style>
+        thead td{
+            font-weight: bold;
         }
-
-        $(document).ready(function(){
-
-            updateListaParticipantes(); //Atualizando lista de participantes
-
-            $("#addNewParticipante").submit(function (e){
-                e.preventDefault();
-
-                var objectToSend = {};
-                $.each($(this).serializeArray(), function(){
-                    console.log(this.name, this.value);
-                    objectToSend[this.name] = this.value;
-                });
-
-                console.log(objectToSend);
-
-
-                $.ajax({
-                    type: "POST",
-                    url: "/novoParticipante",
-                    contentType : 'application/json; charset=utf-8',
-                    dataType : 'json',
-                    data: JSON.stringify(objectToSend),
-                    success: function (dataResponde) {
-                        console.log(dataResponde);
-                        updateListaParticipantes();
-                    }
-                });
-            });
-        });
-    </script>
-
+        tbody{
+            background-color: aquamarine;
+        }
+    </style>
 </head>
 <body>
     <div class="listaParicipantes">
@@ -62,28 +22,28 @@
         <table>
             <thead>
             <tr>
-                <td style="font-weight: bold">nomeParticipante</td>
-                <td style="font-weight: bold">valorPago</td>
-                <td style="font-weight: bold">bebida</td>
-                <td style="font-weight: bold">pago</td>
-                <td style="font-weight: bold">observacao</td>
+                <td>nomeParticipante</td>
+                <td>valorPago</td>
+                <td>bebida</td>
+                <td>pago</td>
+                <td>observacao</td>
             </tr>
             </thead>
             <tbody id="tbody">
             </tbody>
+            <tfooter>
+                <tr>
+                    <form id="addNewParticipante" th:action="@{/}" method="POST">
+                        <td><input name="nomeParticipante" type="text"></td>
+                        <td><input name="valorPago" type="number"></td>
+                        <td><input name="bebida" type="text"></td>
+                        <td><input name="pago" type="number"></td>
+                        <td><input name="observacao" type="text"></td>
+                        <td><input type="submit"></td>
+                    </form>
+                </tr>
+            </tfooter>
         </table>
-    </div>
-
-    <div class="novoParticipante">
-        <p>Novo Participante:</p>
-        <form id="addNewParticipante" th:action="@{/}" method="POST" th:object="${novoParticipante}">
-            <input th:field="*{nomeParticipante}" type="text">
-            <input th:field="*{valorPago}" type="number">
-            <input th:field="*{bebida}" type="text">
-            <input th:field="*{pago}" type="number">
-            <input th:field="*{observacao}" type="text">
-            <input type="submit">
-        </form>
     </div>
 
 </body>
